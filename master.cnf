@@ -1,0 +1,5 @@
+[mysqld]
+log-bin         		= master-bin
+binlog_format   		= mixed
+server-id       		= 1
+
