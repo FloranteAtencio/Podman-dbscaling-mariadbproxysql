@@ -2,7 +2,7 @@
 
 
 CREATE DATABASE football;\
- USE football;\
+ USE football;\`
  CREATE TABLE players (name varchar(50) DEFAULT NULL,position varchar(50) DEFAULT NULL);\
  INSERT INTO players VALUES ('Lionel Messi','Forward');\
  GRANT REPLICATION SLAVE ON *.* TO 'slave_user'@'%' IDENTIFIED BY '123'; #enter password\
@@ -19,6 +19,7 @@ RESET SLAVE ALL; \
    master_use_gtid=slave_pos,\
    MASTER_LOG_POS=1199;\
 START SLAVE;\
+SHOW SLAVE STATUS \G;
 
 
 for  master and slave
@@ -26,6 +27,7 @@ CREATE USER 'maxscale'@'%' IDENTIFIED BY 'maxscale';\
 GRANT SUPER, REPLICA MONITOR, REPLICATION CLIENT, REPLICATION SLAVE, SHOW DATABASES, EVENT, PROCESS, SLAVE MONITOR, READ_ONLY ADMIN ON *.* TO 'maxscale'@'%';\
 GRANT SELECT ON mysql.* TO 'maxscale'@'%';\
 FLUSH PRIVILEGES;\
+
 
 podman run -d --name proxysql \
     --network db-stack \
