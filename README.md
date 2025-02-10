@@ -7,7 +7,7 @@ CREATE DATABASE football;\
  INSERT INTO players VALUES ('Lionel Messi','Forward');\
  GRANT REPLICATION SLAVE ON *.* TO 'slave_user'@'%' IDENTIFIED BY '123'; #enter password\
  FLUSH PRIVILEGES;\
- show master status;\
+ show master status;
 
 STOP SLAVE; \
 RESET SLAVE ALL; \
@@ -85,14 +85,17 @@ SELECT user, host FROM mysql.user;
 
 SHOW GRANTS FOR 'slave_user'@'%';
 
-
 SELECT @@gtid_current_pos;
 SELECT @@gtid_slave_pos;
 
 podman stop $(podman ps -q)
+
 podman rm $(podman ps -aq)
+
 podman volume prune -f
+
 podman network prune -f
+
 
 SELECT variable_name, variable_value 
 FROM global_variables 
