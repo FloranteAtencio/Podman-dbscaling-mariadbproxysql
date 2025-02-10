@@ -67,6 +67,10 @@ UPDATE global_variables SET variable_value='maxscale' WHERE variable_name='mysql
 LOAD MYSQL VARIABLES TO RUNTIME;\
 SAVE MYSQL VARIABLES TO DISK;\
 
+INSERT INTO mysql_replication_hostgroups (writer_hostgroup, reader_hostgroup) VALUES (10, 20);
+LOAD MYSQL SERVERS TO RUNTIME; \
+SAVE MYSQL SERVERS TO DISK;\
+
 podman logs --tail 1000 mariadb-master\
 
 podman pull docker.io/library/mariadb:latest\
