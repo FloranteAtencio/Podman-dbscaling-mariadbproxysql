@@ -1,15 +1,15 @@
 # Podman-dbscaling-mariadbproxysql
 
 
-CREATE DATABASE football;\
+`CREATE DATABASE football;\
  USE football;\`
  CREATE TABLE players (name varchar(50) DEFAULT NULL,position varchar(50) DEFAULT NULL);\
  INSERT INTO players VALUES ('Lionel Messi','Forward');\
  GRANT REPLICATION SLAVE ON *.* TO 'slave_user'@'%' IDENTIFIED BY '123'; #enter password\
  FLUSH PRIVILEGES;\
- show master status;
+ show master status;`
 
-STOP SLAVE; \
+`STOP SLAVE; \
 RESET SLAVE ALL; \
  CHANGE MASTER TO \
    MASTER_HOST='mariadb-master',\
@@ -19,21 +19,21 @@ RESET SLAVE ALL; \
    master_use_gtid=slave_pos,\
    MASTER_LOG_POS=1199;\
 START SLAVE;\
-SHOW SLAVE STATUS \G;
+SHOW SLAVE STATUS \G;`
 
 
 for  master and slave
-CREATE USER 'maxscale'@'%' IDENTIFIED BY 'maxscale';\
+`CREATE USER 'maxscale'@'%' IDENTIFIED BY 'maxscale';\
 GRANT SUPER, REPLICA MONITOR, REPLICATION CLIENT, REPLICATION SLAVE, SHOW DATABASES, EVENT, PROCESS, SLAVE MONITOR, READ_ONLY ADMIN ON *.* TO 'maxscale'@'%';\
 GRANT SELECT ON mysql.* TO 'maxscale'@'%';\
-FLUSH PRIVILEGES;\
+FLUSH PRIVILEGES;\`
 
 
-podman run -d --name proxysql \
+`podman run -d --name proxysql \
     --network db-stack \
     -p 6032:6032 -p 6033:6033 -p 6080:6080 \
     -v proxysql_data:/var/lib/proxysql \
-    proxysql/proxysql
+    proxysql/proxysql`
 
 podman exec -it proxysql sh
 mysql -u admin -padmin -h 127.0.0.1 -P 6032
