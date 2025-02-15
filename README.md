@@ -260,3 +260,9 @@ podman rm $(podman ps -aq)
 podman volume prune -f
 podman network prune -f
 
+```python
+# This is a sample Python code block
+def hello_world():
+    print("Hello, world!")
+
+hello_world()
