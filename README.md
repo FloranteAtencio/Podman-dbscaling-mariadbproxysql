@@ -198,9 +198,9 @@ LOAD MYSQL SERVERS TO RUNTIME;
 SAVE MYSQL SERVERS TO DISK;
 
 INSERT INTO mysql_query_rules (rule_id, active, match_digest, destination_hostgroup, apply)
-VALUES (2, 1, "^SELECT.*", 30, 1),
-       (4, 1, ".*", 10, 1),
-       (1, 1, ".*", 20, 1),
+VALUES (4, 1, "^SELECT.*", 30, 1),
+       (1, 1, ".*", 10, 1),
+       (2, 1, ".*", 20, 1),
        (3, 1, ".*", 40, 1);
 
 LOAD MYSQL QUERY RULES TO RUNTIME;
