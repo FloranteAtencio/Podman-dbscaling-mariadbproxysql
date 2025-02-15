@@ -188,7 +188,7 @@ VALUES (10, '10.89.0.6', 3306, 100),
        (30, '10.89.0.8', 3306, 100);
 
 LOAD MYSQL SERVERS TO RUNTIME;
-SAVE MYSQL SERVERS TO DISK;`
+SAVE MYSQL SERVERS TO DISK;
 
 # 
 
@@ -196,8 +196,8 @@ INSERT INTO mysql_query_rules (rule_id, active, match_digest, destination_hostgr
 VALUES (1, 1, "^SELECT.*", 20, 1),
        (2, 1, ".*", 10, 1);
 
-LOAD MYSQL QUERY RULES TO RUNTIME;`
-SAVE MYSQL QUERY RULES TO DISK;`
+LOAD MYSQL QUERY RULES TO RUNTIME;
+SAVE MYSQL QUERY RULES TO DISK;
 
 #
 
@@ -212,10 +212,10 @@ SAVE MYSQL USERS TO DISK;
 UPDATE global_variables SET variable_value='maxscale'
 WHERE variable_name='mysql-monitor_username';`
 UPDATE global_variables SET variable_value='maxscale'
-WHERE variable_name='mysql-monitor_password';`
+WHERE variable_name='mysql-monitor_password';
 
-`LOAD MYSQL VARIABLES TO RUNTIME;`
-`SAVE MYSQL VARIABLES TO DISK;`
+LOAD MYSQL VARIABLES TO RUNTIME;
+SAVE MYSQL VARIABLES TO DISK;
 
 #
 
