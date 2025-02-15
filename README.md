@@ -138,19 +138,22 @@ You understand that you will be manually setting up and managing ProxySQL to man
 `podman run -d --pod pod-mariadbslave2 --name mariadb-slave2 -v ./db_slave2_data:/var/lib/mysql -v ./slave2.cnf:/etc/mysql/conf.d/mysql.cnf -e MARIADB_ROOT_PASSWORD=1 mariadb:latest`
 
 ## Sample Instance : Database and Table for Master Slave
-` CREATE DATABASE football;`
-` USE football;`
-` CREATE TABLE players (name varchar(50) DEFAULT NULL,position varchar(50) DEFAULT NULL);`
-` INSERT INTO players VALUES ('Lionel Messi','Forward');`
+```SQL
+ CREATE DATABASE football;
+ USE football;
+ CREATE TABLE players (name varchar(50) DEFAULT NULL,position varchar(50) DEFAULT NULL);
+ INSERT INTO players VALUES ('Lionel Messi','Forward');
+```
 ## Create user : replication user for Master Slave 
 ##### Note: replication user is exclusive only for master instance
-` GRANT REPLICATION SLAVE ON *.* TO 'slave_user'@'%' IDENTIFIED BY '123'; #enter password`
-` FLUSH PRIVILEGES;`
-` show master status;`
-
+```SQL
+ GRANT REPLICATION SLAVE ON *.* TO 'slave_user'@'%' IDENTIFIED BY '123'; #enter password
+ FLUSH PRIVILEGES;
+ show master status;
+```
 ## Set up :  Do this for all the rest of salve database  instance
-
-`STOP SLAVE;
+```SQL
+STOP SLAVE;
 RESET SLAVE ALL;
  CHANGE MASTER TO 
    MASTER_HOST='10.89.0.6', -- local ip addres  of master database 
@@ -158,25 +161,29 @@ RESET SLAVE ALL;
    MASTER_PASSWORD='123',
    MASTER_LOG_FILE='master-bin.000004', -- this will appear in the  master database using Show master staus
    master_use_gtid=slave_pos, -- set the  GTID in slave_POS
-   MASTER_LOG_POS=343; -- same goes here `
-`START SLAVE;`
-`show slave status \G;`
-
+   MASTER_LOG_POS=343; -- same goes here 
+START SLAVE;
+show slave status \G;
+```
 ### Create user : master and slave 
-`CREATE USER 'maxscale'@'%' IDENTIFIED BY 'maxscale';`
-`GRANT SUPER, REPLICA MONITOR, REPLICATION CLIENT, REPLICATION SLAVE, SHOW DATABASES, EVENT, PROCESS, SLAVE MONITOR, READ_ONLY ADMIN ON *.* TO 'maxscale'@'%';`
-`GRANT SELECT ON mysql.* TO 'maxscale'@'%';`
-`FLUSH PRIVILEGES;`
-
+```SQL
+CREATE USER 'maxscale'@'%' IDENTIFIED BY 'maxscale';
+GRANT SUPER, REPLICA MONITOR, REPLICATION CLIENT, REPLICATION SLAVE, SHOW DATABASES, EVENT, PROCESS, SLAVE MONITOR, READ_ONLY ADMIN ON *.* TO 'maxscale'@'%';
+GRANT SELECT ON mysql.* TO 'maxscale'@'%';
+FLUSH PRIVILEGES;
+```
 ### Container engine : Podman for this example!
+```PODMAN
 `podman pod create --name pod-proxysql -p 6033:6033 -p 6032:6032 -p 6080:6080 --network db-stack `
 
 `podman run -d --pod pod-proxysql --name proxysql -v proxysql_data:/var/lib/proxysql proxysql/proxysql`
-
+```
 ### Access: Enter podman shell state log in
+```SH
 `podman exec -it proxysql sh`
 
 `mysql -u admin -padmin -h 127.0.0.1 -P 6032`
+```
 ### Setup : Copy the following
 
 ```SQL
