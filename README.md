@@ -4,9 +4,9 @@ Final Plan: 3-Node Server with K3s, Containerized MariaDB (Master-Slave Replicat
 
 Goal: A highly available and scalable MariaDB deployment with a dedicated master, two slaves, and ProxySQL for database load balancing, all containerized and orchestrated by K3s.
 
-Components:
+* Components:
 
-Hardware:
+* Hardware:
 
 Three physical server nodes (Nodes 1, 2, and 3).
 
@@ -18,15 +18,15 @@ K3s (lightweight Kubernetes)
 
 Containerd (or other container runtime, managed by K3s)
 
-Docker Engine (necessary for building/managing images if not using buildkit)
+Docker Engine or Podman(necessary for building/managing images if not using buildkit)
 
 Containerized Applications:
 
-MariaDB Master: A single Docker container running MariaDB, configured as the master server in the replication setup.
+MariaDB Master: A single Docker or Podman container running MariaDB, configured as the master server in the replication setup.
 
-MariaDB Slaves: Two Docker containers running MariaDB, configured as slaves replicating from the master.
+MariaDB Slaves: Two Docker or Podman containers running MariaDB, configured as slaves replicating from the master.
 
-ProxySQL: A Docker container running ProxySQL to provide load balancing and query routing for the MariaDB cluster.
+ProxySQL: A Docker or Podman container running ProxySQL to provide load balancing and query routing for the MariaDB cluster.
 
 Key Points/Confirmations:
 
@@ -38,7 +38,7 @@ ProxySQL: A great option for load balancing, query routing, and connection pooli
 
 No Proxmox: There is no Proxmox involved; you are installing the OS and K3s directly on the hardware.
 
-Containerized Everything: All the components (MariaDB and ProxySQL) will be running in Docker containers managed by K3s.
+Containerized Everything: All the components (MariaDB and ProxySQL) will be running in Docker or podman containers managed by K3s.
 
 Manual ProxySQL Configuration: You understand that you will be manually setting up and managing ProxySQL to manage traffic and to scale resources across your databases
 
@@ -108,7 +108,7 @@ Resource Allocation: Each server can run at most, a single master. Make sure tha
 
 Next Steps:
 
-Create the Docker Images: Create Docker images for MariaDB and ProxySQL, or use existing images from Docker Hub.
+Create the Container Images: Create Docker images for MariaDB and ProxySQL, or use existing images from Docker Hub.
 
 Write Kubernetes Manifests: Create the Kubernetes Deployment and Service manifests.
 
