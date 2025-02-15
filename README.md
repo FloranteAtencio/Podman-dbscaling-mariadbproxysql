@@ -181,9 +181,9 @@ RESET SLAVE ALL;
 
 ```SQL
 INSERT INTO mysql_servers (hostgroup_id, hostname, port, weight)<br/> 
-VALUES (10, '10.89.0.6', 3306, 100), -- offline node
+VALUES (10, '10.89.0.7', 3306, 100), -- offlinenode
        (20, '10.89.0.6', 3306, 100), -- write only
-       (40, '10.89.0.7', 3306, 100), -- back write
+       (40, '10.89.0.7', 3306, 100), -- back up write
        (30, '10.89.0.7', 3306, 100), -- read only
        (30, '10.89.0.8', 3306, 100); -- read only
 
