@@ -179,16 +179,15 @@ RESET SLAVE ALL;
 `mysql -u admin -padmin -h 127.0.0.1 -P 6032`
 ### Setup : Copy the following
 
-`INSERT INTO mysql_servers (hostgroup_id, hostname, port, weight)<br/> 
-VALUES (10, '10.89.0.6', 3306, 100),<br/>
-       (20, '10.89.0.6', 3306, 100),<br/>
-       (40, '10.89.0.7', 3306, 100),<br/>
-       (30, '10.89.0.7', 3306, 100),<br/>
-       (30, '10.89.0.8', 3306, 100);<br/> `
-
-`LOAD MYSQL SERVERS TO RUNTIME;`
-
-`SAVE MYSQL SERVERS TO DISK;`
+```SQL
+INSERT INTO mysql_servers (hostgroup_id, hostname, port, weight)<br/> 
+VALUES (10, '10.89.0.6', 3306, 100),
+       (20, '10.89.0.6', 3306, 100),
+       (40, '10.89.0.7', 3306, 100),
+       (30, '10.89.0.7', 3306, 100),
+       (30, '10.89.0.8', 3306, 100);
+LOAD MYSQL SERVERS TO RUNTIME;
+SAVE MYSQL SERVERS TO DISK;`
 
 # 
 
@@ -259,10 +258,3 @@ podman stop $(podman ps -q)
 podman rm $(podman ps -aq)
 podman volume prune -f
 podman network prune -f
-
-```python
-# This is a sample Python code block
-def hello_world():
-    print("Hello, world!")
-
-hello_world()
