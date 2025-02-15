@@ -174,15 +174,15 @@ FLUSH PRIVILEGES;
 ```
 ### Container engine : Podman for this example!
 ```PODMAN
-`podman pod create --name pod-proxysql -p 6033:6033 -p 6032:6032 -p 6080:6080 --network db-stack `
+podman pod create --name pod-proxysql -p 6033:6033 -p 6032:6032 -p 6080:6080 --network db-stack
 
-`podman run -d --pod pod-proxysql --name proxysql -v proxysql_data:/var/lib/proxysql proxysql/proxysql`
+podman run -d --pod pod-proxysql --name proxysql -v proxysql_data:/var/lib/proxysql proxysql/proxysql
 ```
 ### Access: Enter podman shell state log in
 ```SH
-`podman exec -it proxysql sh`
+podman exec -it proxysql sh
 
-`mysql -u admin -padmin -h 127.0.0.1 -P 6032`
+mysql -u admin -padmin -h 127.0.0.1 -P 6032
 ```
 ### Setup : Copy the following
 
