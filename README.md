@@ -1,6 +1,6 @@
-# Podman-dbscaling-mariadbproxysql
+# Podman-dbscaling-mariadbproxysql For Home Lab environment.
 
-Final Plan: 3-Node Server with K3s, Containerized MariaDB (Master-Slave Replication), and ProxySQL
+Final Plan: 3-Node Server with K3s, Containerized MariaDB (Master-Slave Replication), and ProxySQL (proxy and mariadb workbench are optional) 
 
 ##### Goal: 
 A highly available and scalable MariaDB deployment with a dedicated master, two slaves, and ProxySQL for database load balancing, all containerized and orchestrated by K3s.
@@ -91,74 +91,93 @@ You understand that you will be manually setting up and managing ProxySQL to man
 
 ### Test the Setup:
 
-Test the replication setup by writing data to the master server and verifying that it is replicated to the slave servers.
+* Test the replication setup by writing data to the master server and verifying that it is replicated to the slave servers.
 
-Test the load balancing by sending traffic to ProxySQL and verifying that it is distributed across the MariaDB instances.
+* Test the load balancing by sending traffic to ProxySQL and verifying that it is distributed across the MariaDB instances.
 
-Test the failover mechanism by simulating a failure of the master server and verifying that one of the slaves is automatically promoted to become the new master.
+* Test the failover mechanism by simulating a failure of the master server and verifying that one of the slaves is automatically promoted to become the new master.
 
-Important Considerations:
+### Important Considerations:
 
-Persistent Storage: Ensure that the MariaDB data directory is stored on a persistent volume that survives container restarts. Use Kubernetes PersistentVolumeClaims (PVCs) to achieve this.
+* Persistent Storage: Ensure that the MariaDB data directory is stored on a persistent volume that survives container restarts. Use Kubernetes PersistentVolumeClaims (PVCs) to achieve this.
 
-Networking: Configure networking properly to allow MariaDB clients to connect to the database server.
+* Networking: Configure networking properly to allow MariaDB clients to connect to the database server.
 
-Security: Secure the K3s cluster, MariaDB instances, and ProxySQL.
+* Security: Secure the K3s cluster, MariaDB instances, and ProxySQL.
 
-Monitoring: Implement monitoring to track the performance of the K3s cluster, MariaDB instances, and ProxySQL.
+* Monitoring: Implement monitoring to track the performance of the K3s cluster, MariaDB instances, and ProxySQL.
 
-Automated Failover: Implement an automated failover mechanism to promote a slave to master in case the main master node fails.
+* Automated Failover: Implement an automated failover mechanism to promote a slave to master in case the main master node fails.
 
-Resource Allocation: Each server can run at most, a single master. Make sure that resources are not strained and the servers are all healthy
+* Resource Allocation: Each server can run at most, a single master. Make sure that resources are not strained and the servers are all healthy
 
-Next Steps:
+### Next Steps:
 
-Create the Container Images: Create Docker images for MariaDB and ProxySQL, or use existing images from Docker Hub.
+* Create the Container Images: Create Docker images for MariaDB and ProxySQL, or use existing images from Docker Hub.
 
-Write Kubernetes Manifests: Create the Kubernetes Deployment and Service manifests.
+* Write Kubernetes Manifests: Create the Kubernetes Deployment and Service manifests.
 
-Deploy to K3s: Deploy the manifests to your K3s cluster
+* Deploy to K3s: Deploy the manifests to your K3s cluster
 
-Do Testing: Always continue to check the ports to make sure that everything is running smoothly.
+* Do Testing: Always continue to check the ports to make sure that everything is running smoothly.
 
-Load to K3s: Then scale traffic to the K3s over time to ensure that the cluster can handle it.
+* Load to K3s: Then scale traffic to the K3s over time to ensure that the cluster can handle it.
 
+## Pod : Podman pod 
 
-`CREATE DATABASE football;
- USE football;
- CREATE TABLE players (name varchar(50) DEFAULT NULL,position varchar(50) DEFAULT NULL);
- INSERT INTO players VALUES ('Lionel Messi','Forward');
- GRANT REPLICATION SLAVE ON *.* TO 'slave_user'@'%' IDENTIFIED BY '123'; #enter password
- FLUSH PRIVILEGES;
- show master status;`
+`podman pod create --name pod-mariadbmaster -p 3306:3306 --network db-stack `
+
+`podman run -d --pod pod-mariadbmaster --name mariadb-master -v ./db_master_data:/var/lib/mysql -v ./master.cnf:/etc/mysql/conf.d/mysql.cnf -e MARIADB_ROOT_PASSWORD=1 mariadb:latest`
+
+`podman pod create --name pod-mariadbslave -p 3307:3306 --network db-stack `
+
+`podman run -d --pod pod-mariadbslave --name mariadb-slave -v ./db_slave_data:/var/lib/mysql -v ./slave.cnf:/etc/mysql/conf.d/mysql.cnf -e MARIADB_ROOT_PASSWORD=1 mariadb:latest`
+
+`podman pod create --name pod-mariadbslave2 -p 3308:3306 --network db-stack `
+
+`podman run -d --pod pod-mariadbslave2 --name mariadb-slave2 -v ./db_slave2_data:/var/lib/mysql -v ./slave2.cnf:/etc/mysql/conf.d/mysql.cnf -e MARIADB_ROOT_PASSWORD=1 mariadb:latest`
+
+## Sample Instance : Database and Table for Master Slave
+` CREATE DATABASE football;`
+` USE football;`
+` CREATE TABLE players (name varchar(50) DEFAULT NULL,position varchar(50) DEFAULT NULL);`
+` INSERT INTO players VALUES ('Lionel Messi','Forward');`
+## Create user : replication user for Master Slave 
+##### Note: replication user is exclusive only for master instance
+` GRANT REPLICATION SLAVE ON *.* TO 'slave_user'@'%' IDENTIFIED BY '123'; #enter password`
+` FLUSH PRIVILEGES;`
+` show master status;`
+
+## Set up :  Do this for all the rest of salve database  instance
 
 `STOP SLAVE;
 RESET SLAVE ALL;
  CHANGE MASTER TO 
-   MASTER_HOST='10.89.0.6',
-   MASTER_USER='slave_user',
+   MASTER_HOST='10.89.0.6', -- local ip addres  of master database 
+   MASTER_USER='slave_user', -- previous user create 
    MASTER_PASSWORD='123',
-   MASTER_LOG_FILE='master-bin.000004',
-   master_use_gtid=slave_pos,
-   MASTER_LOG_POS=343;
-START SLAVE;
-show slave status \G;`
+   MASTER_LOG_FILE='master-bin.000004', -- this will appear in the  master database using Show master staus
+   master_use_gtid=slave_pos, -- set the  GTID in slave_POS
+   MASTER_LOG_POS=343; -- same goes here `
+`START SLAVE;`
+`show slave status \G;`
 
-for  master and slave
-`CREATE USER 'maxscale'@'%' IDENTIFIED BY 'maxscale';
-GRANT SUPER, REPLICA MONITOR, REPLICATION CLIENT, REPLICATION SLAVE, SHOW DATABASES, EVENT, PROCESS, SLAVE MONITOR, READ_ONLY ADMIN ON *.* TO 'maxscale'@'%';
-GRANT SELECT ON mysql.* TO 'maxscale'@'%';
-FLUSH PRIVILEGES;`
+### Create user : master and slave 
+`CREATE USER 'maxscale'@'%' IDENTIFIED BY 'maxscale';`
+`GRANT SUPER, REPLICA MONITOR, REPLICATION CLIENT, REPLICATION SLAVE, SHOW DATABASES, EVENT, PROCESS, SLAVE MONITOR, READ_ONLY ADMIN ON *.* TO 'maxscale'@'%';`
+`GRANT SELECT ON mysql.* TO 'maxscale'@'%';`
+`FLUSH PRIVILEGES;`
 
-`podman run -d --name proxysql \
-    --network db-stack \
-    -p 6032:6032 -p 6033:6033 -p 6080:6080 \
-    -v proxysql_data:/var/lib/proxysql \
-    proxysql/proxysql`
+### Container engine : Podman for this example!
+`podman pod create --name pod-proxysql -p 6033:6033 -p 6032:6032 -p 6080:6080 --network db-stack `
 
-`podman exec -it proxysql sh
-mysql -u admin -padmin -h 127.0.0.1 -P 6032`
+`podman run -d --pod pod-proxysql --name proxysql -v proxysql_data:/var/lib/proxysql proxysql/proxysql`
 
+### Access: Enter podman shell state log in
+`podman exec -it proxysql sh`
+
+`mysql -u admin -padmin -h 127.0.0.1 -P 6032`
+### Setup : Copy the following
 `INSERT INTO mysql_servers (hostgroup_id, hostname, port, weight) VALUES (10, '10.89.0.6', 3306, 100), (20, '10.89.0.7', 3306, 100),(20, '10.89.0.8', 3306, 100);`
 
 `INSERT INTO mysql_servers (hostgroup_id, hostname, port, weight) VALUES (10, '10.89.0.6', 3306, 100), (20, '10.89.0.6', 3306, 100), (40, '10.89.0.7', 3306, 100), (30, '10.89.0.7', 3306, 100), (30, '10.89.0.8', 3306, 100);`
@@ -228,18 +247,3 @@ podman rm $(podman ps -aq)
 podman volume prune -f
 podman network prune -f
 
-podman pod create --name pod-proxysql -p 6033:6033 -p 6032:6032 -p 6080:6080 --network db-stack 
-
-podman run -d --pod pod-proxysql --name proxysql -v proxysql_data:/var/lib/proxysql proxysql/proxysql
-
-podman pod create --name pod-mariadbmaster -p 3306:3306 --network db-stack 
-
-podman run -d --pod pod-mariadbmaster --name mariadb-master -v ./db_master_data:/var/lib/mysql -v ./master.cnf:/etc/mysql/conf.d/mysql.cnf -e MARIADB_ROOT_PASSWORD=1 mariadb:latest
-
-podman pod create --name pod-mariadbslave -p 3307:3306 --network db-stack 
-
-podman run -d --pod pod-mariadbslave --name mariadb-slave -v ./db_slave_data:/var/lib/mysql -v ./slave.cnf:/etc/mysql/conf.d/mysql.cnf -e MARIADB_ROOT_PASSWORD=1 mariadb:latest
-
-podman pod create --name pod-mariadbslave2 -p 3308:3306 --network db-stack 
-
-podman run -d --pod pod-mariadbslave2 --name mariadb-slave2 -v ./db_slave2_data:/var/lib/mysql -v ./slave2.cnf:/etc/mysql/conf.d/mysql.cnf -e MARIADB_ROOT_PASSWORD=1 mariadb:latest
