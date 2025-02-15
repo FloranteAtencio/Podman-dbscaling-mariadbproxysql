@@ -179,11 +179,16 @@ RESET SLAVE ALL;
 `mysql -u admin -padmin -h 127.0.0.1 -P 6032`
 ### Setup : Copy the following
 
-`INSERT INTO mysql_servers (hostgroup_id, hostname, port, weight) 
-VALUES (10, '10.89.0.6', 3306, 100), 
-       (20, '10.89.0.6', 3306, 100), 
+`INSERT INTO mysql_servers (hostgroup_id, hostname, port, weight) `
+
+`VALUES (10, '10.89.0.6', 3306, 100),`
+
+       `(20, '10.89.0.6', 3306, 100), 
+       
        (40, '10.89.0.7', 3306, 100), 
+       
        (30, '10.89.0.7', 3306, 100), 
+       
        (30, '10.89.0.8', 3306, 100);`
 
 `LOAD MYSQL SERVERS TO RUNTIME;`
