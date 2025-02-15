@@ -4,9 +4,9 @@ Final Plan: 3-Node Server with K3s, Containerized MariaDB (Master-Slave Replicat
 
 Goal: A highly available and scalable MariaDB deployment with a dedicated master, two slaves, and ProxySQL for database load balancing, all containerized and orchestrated by K3s.
 
-* Components:
+### Components:
 
-* Hardware:
+### Hardware:
 
 Three physical server nodes (Nodes 1, 2, and 3).
 
