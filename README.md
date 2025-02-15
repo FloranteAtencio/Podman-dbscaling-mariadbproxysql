@@ -2,89 +2,94 @@
 
 Final Plan: 3-Node Server with K3s, Containerized MariaDB (Master-Slave Replication), and ProxySQL
 
-Goal: A highly available and scalable MariaDB deployment with a dedicated master, two slaves, and ProxySQL for database load balancing, all containerized and orchestrated by K3s.
+##### Goal: 
+A highly available and scalable MariaDB deployment with a dedicated master, two slaves, and ProxySQL for database load balancing, all containerized and orchestrated by K3s.
 
-### Components:
+## Components:
 
 ### Hardware:
 
-Three physical server nodes (Nodes 1, 2, and 3).
+* Three physical server nodes (Nodes 1, 2, and 3).
 
-Software Stack (on each node):
+* Software Stack (on each node):
 
-Linux Operating System (e.g., Ubuntu Server, CentOS Stream)
+* Linux Operating System (e.g., Ubuntu Server, CentOS Stream)
 
-K3s (lightweight Kubernetes)
+* K3s (lightweight Kubernetes)
 
-Containerd (or other container runtime, managed by K3s)
+* Containerd (or other container runtime, managed by K3s)
 
-Docker Engine or Podman(necessary for building/managing images if not using buildkit)
+* Docker Engine or Podman(necessary for building/managing images if not using buildkit)
 
-Containerized Applications:
+### Containerized Applications:
 
-MariaDB Master: A single Docker or Podman container running MariaDB, configured as the master server in the replication setup.
+* MariaDB Master: A single Docker or Podman container running MariaDB, configured as the master server in the replication setup.
 
-MariaDB Slaves: Two Docker or Podman containers running MariaDB, configured as slaves replicating from the master.
+* MariaDB Slaves: Two Docker or Podman containers running MariaDB, configured as slaves replicating from the master.
 
-ProxySQL: A Docker or Podman container running ProxySQL to provide load balancing and query routing for the MariaDB cluster.
+* ProxySQL: A Docker or Podman container running ProxySQL to provide load balancing and query routing for the MariaDB cluster.
 
-Key Points/Confirmations:
+### Key Points/Confirmations:
 
-K3s Cluster: You'll have a three-node K3s cluster, providing high availability for the control plane and the ability to schedule your application pods across the nodes.
+* K3s Cluster: You'll have a three-node K3s cluster, providing high availability for the control plane and the ability to schedule your application pods across the nodes.
 
-Master-Slave Replication: MariaDB will use asynchronous master-slave replication for read scalability and basic HA.
+* Master-Slave Replication: MariaDB will use asynchronous master-slave replication for read scalability and basic HA.
 
-ProxySQL: A great option for load balancing, query routing, and connection pooling.
+* ProxySQL: A great option for load balancing, query routing, and connection pooling.
 
-No Proxmox: There is no Proxmox involved; you are installing the OS and K3s directly on the hardware.
+* No Proxmox: There is no Proxmox involved; you are installing the OS and K3s directly on the hardware.
 
-Containerized Everything: All the components (MariaDB and ProxySQL) will be running in Docker or podman containers managed by K3s.
+### Containerized Everything: 
+All the components (MariaDB and ProxySQL) will be running in Docker or podman containers managed by K3s.
 
-Manual ProxySQL Configuration: You understand that you will be manually setting up and managing ProxySQL to manage traffic and to scale resources across your databases
+### Manual ProxySQL Configuration: 
+You understand that you will be manually setting up and managing ProxySQL to manage traffic and to scale resources across your databases
 
-Detailed Steps:
+## Detailed Steps:
 
-Prepare the Servers:
+### Prepare the Servers:
 
-Install Linux on each server.
+* Install Linux on each server.
 
-Configure networking (static IP addresses, DNS).
+* Configure networking (static IP addresses, DNS).
 
-Harden the operating system (firewall, security updates).
+* Harden the operating system (firewall, security updates).
 
-Install K3s:
+### Install K3s:
 
-Install K3s on each server.
+* Install K3s on each server.
 
-Configure K3s for HA using a clustered etcd setup.
+* Configure K3s for HA using a clustered etcd setup.
 
-Define Kubernetes Deployments and Services:
+* Define Kubernetes Deployments and Services:
 
-Create Kubernetes Deployment manifests for the MariaDB master, MariaDB slaves, and ProxySQL.
+* Create Kubernetes Deployment manifests for the MariaDB master, MariaDB slaves, and ProxySQL.
 
-Create a Kubernetes Service manifest for ProxySQL, exposing it to the outside world.
+* Create a Kubernetes Service manifest for ProxySQL, exposing it to the outside world.
 
-Configure MariaDB Replication:
 
-Enable binary logging on the MariaDB master server.
+### Configure MariaDB Replication:
 
-Create a replication user on the MariaDB master server.
+* Enable binary logging on the MariaDB master server.
 
-Configure the MariaDB slave servers to connect to the master server and start replication.
+* Create a replication user on the MariaDB master server.
 
-Configure ProxySQL:
+* Configure the MariaDB slave servers to connect to the master server and start replication.
 
-Configure ProxySQL to connect to the MariaDB master and slave servers.
 
-Configure query routing rules to send read queries to the slaves and write queries to the master.
+### Configure ProxySQL:
 
-Deploy the Pods:
+* Configure ProxySQL to connect to the MariaDB master and slave servers.
 
-Apply the Kubernetes Deployment and Service manifests to deploy the pods.
+* Configure query routing rules to send read queries to the slaves and write queries to the master.
 
-Deploy the pods based on the yaml files to the respective ports.
+### Deploy the Pods:
 
-Test the Setup:
+* Apply the Kubernetes Deployment and Service manifests to deploy the pods.
+
+* Deploy the pods based on the yaml files to the respective ports.
+
+### Test the Setup:
 
 Test the replication setup by writing data to the master server and verifying that it is replicated to the slave servers.
 
