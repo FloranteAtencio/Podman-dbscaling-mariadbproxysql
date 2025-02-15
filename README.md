@@ -181,7 +181,7 @@ RESET SLAVE ALL;
 
 ```SQL
 INSERT INTO mysql_servers (hostgroup_id, hostname, port, weight)<br/> 
-VALUES (10, '10.89.0.7', 3306, 100), -- offlinenode
+VALUES (10, '10.89.0.6', 3306, 100), -- offline node
        (20, '10.89.0.6', 3306, 100), -- write only
        (40, '10.89.0.7', 3306, 100), -- back up write
        (30, '10.89.0.7', 3306, 100), -- read only
@@ -214,14 +214,27 @@ LOAD MYSQL VARIABLES TO RUNTIME;
 SAVE MYSQL VARIABLES TO DISK;
 
 INSERT INTO mysql_group_replication_hostgroups
-(writer_hostgroup,
-backup_writer_hostgroup,
-reader_hostgroup,
-offline_hostgroup,
-active, max_writers,
-writer_is_also_reader,
-max_transactions_behind)
-VALUES (20, 40, 30, 10, 1, 2, 10, 100);
+(writer_hostgroup, -- The hostgroup to which all write traffic should be sent by default
+
+backup_writer_hostgroup, -- The hostgroup for additional writers if the number of writers exceeds
+
+reader_hostgroup, -- he hostgroup to which read traffic should be sent
+
+offline_hostgroup, --This ensures that any traffic is redirected away from it until it comes back online and is ready to handle operations again. The setup helps maintain high availability and reliability in your replication environment.
+
+active, -- A flag indicating whether the hostgroup is active (1) or not (0)
+max_writers, -- The maximum number of writers allowed in the writer_hostgroup
+writer_is_also_reader, -- ndicates whether the writer can also serve read requests (0 = no, 1 = yes)
+max_transactions_behind -- The maximum number of transactions that can be behind before a hostgroup is considered out of sync
+)
+VALUES (20, -- hostgroup
+        40, -- hostgroup
+        30, -- hostgroup
+        10, -- hostgroup
+         1, -- (1) or (0)
+         2, -- (1) or (0)
+         0, -- (1) or (0O
+         100);
 
 LOAD MYSQL SERVERS TO RUNTIME;
 SAVE MYSQL SERVERS TO DISK;
