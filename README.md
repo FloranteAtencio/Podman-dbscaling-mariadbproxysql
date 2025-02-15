@@ -186,41 +186,45 @@ VALUES (10, '10.89.0.6', 3306, 100),
        (40, '10.89.0.7', 3306, 100),
        (30, '10.89.0.7', 3306, 100),
        (30, '10.89.0.8', 3306, 100);
+
 LOAD MYSQL SERVERS TO RUNTIME;
 SAVE MYSQL SERVERS TO DISK;`
 
 # 
 
-`INSERT INTO mysql_query_rules (rule_id, active, match_digest, destination_hostgroup, apply) VALUES 
-(1, 1, "^SELECT.*", 20, 1),
-(2, 1, ".*", 10, 1);`
+INSERT INTO mysql_query_rules (rule_id, active, match_digest, destination_hostgroup, apply)
+VALUES (1, 1, "^SELECT.*", 20, 1),
+       (2, 1, ".*", 10, 1);
 
-`LOAD MYSQL QUERY RULES TO RUNTIME;`
-`SAVE MYSQL QUERY RULES TO DISK;`
-
-#
-
-`INSERT INTO mysql_users (username, password, default_hostgroup) VALUES 
-('maxscale', 'maxscale', 10);`
-
-`LOAD MYSQL USERS TO RUNTIME;`
-`SAVE MYSQL USERS TO DISK;`
+LOAD MYSQL QUERY RULES TO RUNTIME;`
+SAVE MYSQL QUERY RULES TO DISK;`
 
 #
 
-`UPDATE global_variables SET variable_value='maxscale' WHERE variable_name='mysql-monitor_username';`
-`UPDATE global_variables SET variable_value='maxscale' WHERE variable_name='mysql-monitor_password';`
+INSERT INTO mysql_users (username, password, default_hostgroup)
+VALUES ('maxscale', 'maxscale', 10);
+
+LOAD MYSQL USERS TO RUNTIME;
+SAVE MYSQL USERS TO DISK;
+
+#
+
+UPDATE global_variables SET variable_value='maxscale'
+WHERE variable_name='mysql-monitor_username';`
+UPDATE global_variables SET variable_value='maxscale'
+WHERE variable_name='mysql-monitor_password';`
 
 `LOAD MYSQL VARIABLES TO RUNTIME;`
 `SAVE MYSQL VARIABLES TO DISK;`
 
 #
 
-`INSERT INTO mysql_group_replication_hostgroups (writer_hostgroup, backup_writer_hostgroup, reader_hostgroup, offline_hostgroup, active, max_writers, writer_is_also_reader, max_transactions_behind) VALUES (20, 40, 30, 10, 1, 2, 1, 100);`
+INSERT INTO mysql_group_replication_hostgroups (writer_hostgroup, backup_writer_hostgroup, reader_hostgroup, offline_hostgroup, active, max_writers, writer_is_also_reader, max_transactions_behind)
+VALUES (20, 40, 30, 10, 1, 2, 1, 100);
 
-`LOAD MYSQL SERVERS TO RUNTIME;`
-`SAVE MYSQL SERVERS TO DISK;`
-
+LOAD MYSQL SERVERS TO RUNTIME;
+SAVE MYSQL SERVERS TO DISK;
+```
 #
 
 # Debugging
