@@ -124,19 +124,19 @@ You understand that you will be manually setting up and managing ProxySQL to man
 * Load to K3s: Then scale traffic to the K3s over time to ensure that the cluster can handle it.
 
 ## Pod : Podman pod 
+```BASH
+podman pod create --name pod-mariadbmaster -p 3306:3306 --network db-stack
 
-`podman pod create --name pod-mariadbmaster -p 3306:3306 --network db-stack `
+podman run -d --pod pod-mariadbmaster --name mariadb-master -v ./db_master_data:/var/lib/mysql -v ./master.cnf:/etc/mysql/conf.d/mysql.cnf -e MARIADB_ROOT_PASSWORD=1 mariadb:latest
 
-`podman run -d --pod pod-mariadbmaster --name mariadb-master -v ./db_master_data:/var/lib/mysql -v ./master.cnf:/etc/mysql/conf.d/mysql.cnf -e MARIADB_ROOT_PASSWORD=1 mariadb:latest`
+podman pod create --name pod-mariadbslave -p 3307:3306 --network db-stack
 
-`podman pod create --name pod-mariadbslave -p 3307:3306 --network db-stack `
+podman run -d --pod pod-mariadbslave --name mariadb-slave -v ./db_slave_data:/var/lib/mysql -v ./slave.cnf:/etc/mysql/conf.d/mysql.cnf -e MARIADB_ROOT_PASSWORD=1 mariadb:latest
 
-`podman run -d --pod pod-mariadbslave --name mariadb-slave -v ./db_slave_data:/var/lib/mysql -v ./slave.cnf:/etc/mysql/conf.d/mysql.cnf -e MARIADB_ROOT_PASSWORD=1 mariadb:latest`
+podman pod create --name pod-mariadbslave2 -p 3308:3306 --network db-stack
 
-`podman pod create --name pod-mariadbslave2 -p 3308:3306 --network db-stack `
-
-`podman run -d --pod pod-mariadbslave2 --name mariadb-slave2 -v ./db_slave2_data:/var/lib/mysql -v ./slave2.cnf:/etc/mysql/conf.d/mysql.cnf -e MARIADB_ROOT_PASSWORD=1 mariadb:latest`
-
+podman run -d --pod pod-mariadbslave2 --name mariadb-slave2 -v ./db_slave2_data:/var/lib/mysql -v ./slave2.cnf:/etc/mysql/conf.d/mysql.cnf -e MARIADB_ROOT_PASSWORD=1 mariadb:latest
+```
 ## Sample Instance : Database and Table for Master Slave
 ```SQL
  CREATE DATABASE football;
