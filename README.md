@@ -191,10 +191,10 @@ LOAD MYSQL SERVERS TO RUNTIME;
 SAVE MYSQL SERVERS TO DISK;
 
 INSERT INTO mysql_query_rules (rule_id, active, match_digest, destination_hostgroup, apply)
-VALUES (1, 1, "^SELECT.*", 30, 1),
-       (2, 1, ".*", 10, 1),
-       (3, 1, ".*", 20, 1),
-       (4, 1, ".*", 40, 1);
+VALUES (2, 1, "^SELECT.*", 30, 1),
+       (4, 1, ".*", 10, 1),
+       (1, 1, ".*", 20, 1),
+       (3, 1, ".*", 40, 1);
 
 LOAD MYSQL QUERY RULES TO RUNTIME;
 SAVE MYSQL QUERY RULES TO DISK;
@@ -223,8 +223,11 @@ reader_hostgroup, -- he hostgroup to which read traffic should be sent
 offline_hostgroup, --This ensures that any traffic is redirected away from it until it comes back online and is ready to handle operations again. The setup helps maintain high availability and reliability in your replication environment.
 
 active, -- A flag indicating whether the hostgroup is active (1) or not (0)
+
 max_writers, -- The maximum number of writers allowed in the writer_hostgroup
-writer_is_also_reader, -- ndicates whether the writer can also serve read requests (0 = no, 1 = yes)
+
+writer_is_also_reader, -- indicates whether the writer can also serve read requests (0 = no, 1 = yes)
+
 max_transactions_behind -- The maximum number of transactions that can be behind before a hostgroup is considered out of sync
 )
 VALUES (20, -- hostgroup
@@ -232,8 +235,8 @@ VALUES (20, -- hostgroup
         30, -- hostgroup
         10, -- hostgroup
          1, -- (1) or (0)
-         2, -- (1) or (0)
-         0, -- (1) or (0O
+         2, -- number of availabity
+         0, -- (1) or (0)
          100);
 
 LOAD MYSQL SERVERS TO RUNTIME;
