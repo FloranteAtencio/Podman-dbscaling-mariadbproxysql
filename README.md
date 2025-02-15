@@ -210,7 +210,7 @@ SAVE MYSQL USERS TO DISK;
 #
 
 UPDATE global_variables SET variable_value='maxscale'
-WHERE variable_name='mysql-monitor_username';`
+WHERE variable_name='mysql-monitor_username';
 UPDATE global_variables SET variable_value='maxscale'
 WHERE variable_name='mysql-monitor_password';
 
