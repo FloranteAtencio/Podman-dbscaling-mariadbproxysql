@@ -219,7 +219,14 @@ SAVE MYSQL VARIABLES TO DISK;
 
 #
 
-INSERT INTO mysql_group_replication_hostgroups (writer_hostgroup, backup_writer_hostgroup, reader_hostgroup, offline_hostgroup, active, max_writers, writer_is_also_reader, max_transactions_behind)
+INSERT INTO mysql_group_replication_hostgroups
+(writer_hostgroup,
+backup_writer_hostgroup,
+reader_hostgroup,
+offline_hostgroup,
+active, max_writers,
+writer_is_also_reader,
+max_transactions_behind)
 VALUES (20, 40, 30, 10, 1, 2, 1, 100);
 
 LOAD MYSQL SERVERS TO RUNTIME;
