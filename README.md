@@ -10,7 +10,6 @@ A highly available and scalable MariaDB deployment with a dedicated master, two 
 #### Hardware and Application:
 
 * Three physical server nodes (Nodes 1, 2, and 3).
-* Software Stack (on each node):
 * Linux Operating System (e.g., Ubuntu Server, CentOS Stream)
 * K3s (lightweight Kubernetes)
 * Containerd (or other container runtime, managed by K3s)
@@ -31,6 +30,7 @@ A highly available and scalable MariaDB deployment with a dedicated master, two 
 * ProxySQL: A great option for load balancing, query routing, and connection pooling.
 * Rancher: Native VE K3s for monitoring.
 * longhorn: for persinstent shared storage
+*  KeepAlive: HA and Automation network level
 
 ### Containerized Everything: 
 All the components (MariaDB and ProxySQL) will be running in containerd managed by K3s.
