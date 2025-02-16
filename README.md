@@ -14,7 +14,7 @@ A highly available and scalable MariaDB deployment with a dedicated master, two 
 * Linux Operating System (e.g., Ubuntu Server, CentOS Stream)
 * K3s (lightweight Kubernetes)
 * Containerd (or other container runtime, managed by K3s)
-* Rancher VE Cluster (necessary for building/managing images if not using buildkit)
+* Rancher VE Cluster
 * Longhorn (Shared Storage)
 
 
