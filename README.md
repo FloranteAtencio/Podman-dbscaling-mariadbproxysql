@@ -1,4 +1,4 @@
-# mariaddbscaling-Home Lab environment.
+# Home Lab Environment
 
 Final Plan: 3-Node Server with K3s, Containerized MariaDB (Master-Slave Replication), and ProxySQL (proxmox and mariadb workbench are optional) 
 
