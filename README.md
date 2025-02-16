@@ -29,12 +29,12 @@ A highly available and scalable MariaDB deployment with a dedicated master, two 
 * K3s Cluster: You'll have a three-node K3s cluster, providing high availability for the control plane and the ability to schedule your application pods across the nodes.
 * Master-Slave Replication: MariaDB will use asynchronous master-slave replication for read scalability and basic HA.
 * ProxySQL: A great option for load balancing, query routing, and connection pooling.
-* Rancher: Native VE K3s.
+* Rancher: Native VE K3s for monitoring.
 
 ### Containerized Everything: 
-All the components (MariaDB and ProxySQL) will be running in Docker or podman containers managed by K3s.
+All the components (MariaDB and ProxySQL) will be running in containerd managed by K3s.
 
-### Manual ProxySQL Configuration: 
+### Manual ProxySQL Configuration: NOTE
 You understand that you will be manually setting up and managing ProxySQL to manage traffic and to scale resources across your databases
 
 ## Detailed Steps:
@@ -44,22 +44,21 @@ You understand that you will be manually setting up and managing ProxySQL to man
 * Install Linux on each server.
 * Configure networking (static IP addresses, DNS).
 * Harden the operating system (firewall, security updates).
-
+  
 ### Install K3s:
 
 * Install K3s on each server.
+* Setup master node 
+* configure the working node get the token and ip of master node.
 * Configure K3s for HA using a clustered etcd setup.
 * Define Kubernetes Deployments and Services:
 * Create Kubernetes Deployment manifests for the MariaDB master, MariaDB slaves, and ProxySQL.
 * Create a Kubernetes Service manifest for ProxySQL, exposing it to the outside world.
 
-
 ### Configure MariaDB Replication:
-
-* Enable binary logging on the MariaDB master server.
+* Create User the has most of the privelged each of database instance.
 * Create a replication user on the MariaDB master server.
 * Configure the MariaDB slave servers to connect to the master server and start replication.
-
 
 ### Configure ProxySQL:
 
@@ -71,6 +70,7 @@ You understand that you will be manually setting up and managing ProxySQL to man
 * Test the replication setup by writing data to the master server and verifying that it is replicated to the slave servers.
 * Test the load balancing by sending traffic to ProxySQL and verifying that it is distributed across the MariaDB instances.
 * Test the failover mechanism by simulating a failure of the master server and verifying that one of the slaves is automatically promoted to become the new master.
+  
 ### Important Considerations:
 
 * Persistent Storage: Ensure that the MariaDB data directory is stored on a persistent volume that survives container restarts. Use Kubernetes PersistentVolumeClaims (PVCs) to achieve this.
@@ -82,11 +82,7 @@ You understand that you will be manually setting up and managing ProxySQL to man
 
 ### Next Steps:
 
-* Create the Container Images: Create Docker images for MariaDB and ProxySQL, or use existing images from Docker Hub.
-
-* Write Kubernetes Manifests: Create the Kubernetes Deployment and Service manifests.
-  
-* Deploy to K3s: Deploy the manifests to your K3s cluster
+* Install Rancher setup High avalabity, failover and etc
 
 * Do Testing: Always continue to check the ports to make sure that everything is running smoothly.
 
