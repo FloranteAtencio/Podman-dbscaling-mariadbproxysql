@@ -16,7 +16,7 @@ A highly available and scalable MariaDB deployment with a dedicated master, two 
 * Containerd (or other container runtime, managed by K3s)
 * Rancher VE Cluster
 * Longhorn (Shared Storage)
-
+* KeepAlive (HA and Automation network level)
 
 ### Containerized Applications:
 
