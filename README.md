@@ -1,4 +1,4 @@
-# Podman-dbscaling-mariadbproxysql For Home Lab environment.
+# mariaddbscaling-Home Lab environment.
 
 Final Plan: 3-Node Server with K3s, Containerized MariaDB (Master-Slave Replication), and ProxySQL (proxmox and mariadb workbench are optional) 
 
