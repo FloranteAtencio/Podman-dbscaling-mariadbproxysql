@@ -120,12 +120,7 @@ GRANT SUPER, REPLICA MONITOR, REPLICATION CLIENT, REPLICATION SLAVE, SHOW DATABA
 GRANT SELECT ON mysql.* TO 'maxscale'@'%';
 FLUSH PRIVILEGES;
 ```
-### Container engine : Podman for this example!
-```PODMAN
-podman pod create --name pod-proxysql -p 6033:6033 -p 6032:6032 -p 6080:6080 --network db-stack
 
-podman run -d --pod pod-proxysql --name proxysql -v proxysql_data:/var/lib/proxysql proxysql/proxysql
-```
 ### Setup : Copy the following
 
 ```SQL
