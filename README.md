@@ -7,7 +7,7 @@ A highly available and scalable MariaDB deployment with a dedicated master, two 
 
 ## Components:
 
-#### Hardware:
+#### Hardware and Application:
 
 * Three physical server nodes (Nodes 1, 2, and 3).
 * Software Stack (on each node):
@@ -27,9 +27,10 @@ A highly available and scalable MariaDB deployment with a dedicated master, two 
 ### Key Points/Confirmations:
 
 * K3s Cluster: You'll have a three-node K3s cluster, providing high availability for the control plane and the ability to schedule your application pods across the nodes.
-* Master-Slave Replication: MariaDB will use asynchronous master-slave replication for read scalability and basic HA.
+* Master-Slave Replication: MariaDB statefulset will use asynchronous master-slave replication for read scalability and basic HA.
 * ProxySQL: A great option for load balancing, query routing, and connection pooling.
 * Rancher: Native VE K3s for monitoring.
+* longhorn: for persinstent shared storage
 
 ### Containerized Everything: 
 All the components (MariaDB and ProxySQL) will be running in containerd managed by K3s.
