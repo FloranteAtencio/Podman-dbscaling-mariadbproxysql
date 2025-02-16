@@ -20,9 +20,9 @@ A highly available and scalable MariaDB deployment with a dedicated master, two 
 
 ### Containerized Applications:
 
-* MariaDB Master: A single Docker or Podman container running MariaDB, configured as the master server in the replication setup.
-* MariaDB Slaves: Two Docker or Podman containers running MariaDB, configured as slaves replicating from the master.
-* ProxySQL: A Docker or Podman container running ProxySQL to provide load balancing and query routing for the MariaDB cluster.
+* MariaDB Master: A container running MariaDB, configured as the master server in the replication setup.
+* MariaDB Slaves: Two Container  running MariaDB, configured as slaves replicating from the master with uniques configuration.
+* ProxySQL: A container running ProxySQL to provide load balancing and query routing for the MariaDB cluster.
 
 ### Key Points/Confirmations:
 
@@ -50,7 +50,6 @@ You understand that you will be manually setting up and managing ProxySQL to man
 * Install K3s on each server.
 * Setup master node 
 * configure the working node get the token and ip of master node.
-* Configure K3s for HA using a clustered etcd setup.
 * Define Kubernetes Deployments and Services:
 * Create Kubernetes Deployment manifests for the MariaDB master, MariaDB slaves, and ProxySQL.
 * Create a Kubernetes Service manifest for ProxySQL, exposing it to the outside world.
@@ -83,10 +82,7 @@ You understand that you will be manually setting up and managing ProxySQL to man
 ### Next Steps:
 
 * Install Rancher setup High avalabity, failover and etc
-
-* Do Testing: Always continue to check the ports to make sure that everything is running smoothly.
-
-* Load to K3s: Then scale traffic to the K3s over time to ensure that the cluster can handle it.
+* Install longhorn for shared storage to avoid single point of failure
 
 ## Sample Instance : Database and Table for Master Slave
 ```SQL
